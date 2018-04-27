@@ -1,31 +1,25 @@
 pragma solidity ^0.4.3;
 
 contract TestCalculation {
+  function getFactor(uint256 a, uint256 b) public pure returns (uint256) {
+    return 10 ** ((a + b) > 77 ? (77 - a) : b);
+  }
  function implementation1(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
    uint256 numerator = sqrt(r) * sqrt(t);
    uint256 denomerator = sqrt(R) * sqrt(T);
-   uint256 numeratorLength = numDigits(numerator);
-   uint256 denomeratorLength = numDigits(denomerator) / 2;
-   uint256 factor = 10 ** ((numeratorLength + denomeratorLength) > 78 ? (78 - numeratorLength - 1) : denomeratorLength);
-   uint256 res = numerator * factor / (denomerator / factor);
-   return mul(res, (availableAmount / factor)) / factor;
+   uint256 factor = getFactor(numDigits(numerator), (numDigits(denomerator) / 2));
+   uint256 res = mul(numerator, factor) / (denomerator / factor);
+   return (mul(sqrt(res), sqrt(availableAmount)) / factor) ** 2;
   }
 
-  /* function implementation1(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
-    uint256 numerator = r * t;
-    uint256 denumerator = R * T;
-    uint256 d = numDigits(denumerator) / 2;
-    uint256 factor = 10 ** uint256((d % 2 == 0) ? d : d - 1);
-    uint256 res = sqrt(numerator * factor / (denumerator / factor));
-    return mul(res, availableAmount) / factor;
-   } */
-
   function implementation2(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
-    uint256 numerator = r * t;
-    uint256 denumerator = R * T;
-    uint256 factor = 78 - (numDigits(numerator) / 2);
-    uint256 res = sqrt(numerator * (10 ** factor) / (denumerator / 10 ** factor));
-    return mul(res, availableAmount) / (10 ** factor);
+    uint256 numerator = sqrt(r) * sqrt(t);
+    uint256 denomerator = sqrt(R) * sqrt(T);
+    uint256 numeratorLength = numDigits(numerator);
+    uint256 denomeratorLength = numDigits(denomerator) / 2;
+    uint256 factor = 10 ** ((numeratorLength + denomeratorLength) > 78 ? (78 - numeratorLength - 1) : denomeratorLength);
+    uint256 res = mul(numerator, factor) / (denomerator / factor);
+    return mul(res, (availableAmount / factor)) / factor;
    }
 
    function implementation3(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
