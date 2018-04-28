@@ -43,7 +43,7 @@ contract('TestCalculation', function(accounts) {
       },
       {
         totalReputation: BigNumber("10000000000"),
-        userReputation: BigNumber("10000"),
+        userReputation: BigNumber("1000000000"),
         totalTokens:BigNumber("1000000000000000000000"),
         userTokens:BigNumber("1000000000"),
         payoutAmount:BigNumber("2000000000"),
@@ -122,35 +122,12 @@ contract('TestCalculation', function(accounts) {
   });
 
   reputations.forEach(data => {
-    it.skip("implementation2", async () => {
+    it("implementation2", async () => {
       m = await TestCalculation.deployed();
       const gas = await m.implementation2.estimateGas(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
       const res = await m.implementation2(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
       const onChainResult = BigNumber(res.toString());
-      const preciseResult = BigNumberCalculation(data);
-      console.log("");
-      console.log("On chain result: ", onChainResult.toString());
-      console.log("Precise result", preciseResult.toString());
-      console.log("");
-      console.log("User Tokens: ", data.userTokens.toString());
-      console.log("User Reputation: ", data.userReputation.toString());
-      console.log("Total Tokens: ", data.totalTokens.toString());
-      console.log("Total Reputation: ", data.totalReputation.toString());
-      console.log("Reward pool: ", data.payoutAmount.toString());
-      console.log("Percentage Wrong: ", onChainResult.minus(preciseResult).div(preciseResult).times(100).toString(), "%");
-      console.log("Absolute Wrong: ", onChainResult.minus(preciseResult).toString())
-      console.log("Estimated Gas cost: ", gas.toString());
-      console.log("");
-    });
-  });
-
-  reputations.forEach(data => {
-    it.skip("implementation3", async () => {
-      m = await TestCalculation.deployed();
-      const gas = await m.implementation3.estimateGas(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
-      const res = await m.implementation3(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
-      const onChainResult = BigNumber(res.toString());
-      const preciseResult = BigNumberCalculation(data);
+      const preciseResult = BigNumberCalculationINT(data);
       console.log("");
       console.log("On chain result: ", onChainResult.toString());
       console.log("Precise result", preciseResult.toString());
