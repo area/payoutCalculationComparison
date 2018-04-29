@@ -44,6 +44,20 @@ contract TestCalculation {
     return b;
   }
 
+  function isqrt(uint256 a) public pure returns (uint256) {
+    if (a < 2) {
+      return a;
+    } else {
+      uint256 sm = isqrt(a >> 2) << 1;
+      uint256 lm = sm + 1;
+      if (sm*lm > a) {
+        return sm;
+      } else {
+        return lm;
+      }
+    }
+  }
+
   function numDigits(uint256 a) public pure returns (uint8) {
     uint8 len = 0;
     uint256 b = a;

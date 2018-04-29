@@ -11,6 +11,20 @@ function len(n) {
   return l;
 }
 
+function BigNumberCalculation({
+  userTokens,
+  userReputation,
+  totalTokens,
+  totalReputation,
+  payoutAmount
+}) {
+  const sharePercentage = userTokens
+  .times(userReputation)
+  .div(totalTokens.times(totalReputation))
+  .sqrt();
+return payoutAmount.times(sharePercentage);
+}
+
 function BigNumberCalculationINT(r){
   const numerator = r.userTokens.sqrt().times(r.userReputation.sqrt());
   console.log(len(numerator), 't*r');
@@ -97,6 +111,13 @@ contract('TestCalculation', function(accounts) {
         totalTokens:BigNumber("28374293742367482637846238764782364872367486238746238762346822837429374236748"),
         userTokens:BigNumber("4523145231452314523145231452314523112452314523145231452314523145231452311"),
         payoutAmount:BigNumber("827589347587349857398"),
+      },
+      {
+        totalReputation: BigNumber("1552110"),
+        userReputation: BigNumber("517370"),
+        totalTokens:BigNumber("1552110"),
+        userTokens:BigNumber("517370"),
+        payoutAmount:BigNumber("9e+73"),
       },
     ];
 
