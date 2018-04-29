@@ -16,7 +16,8 @@ function BigNumberCalculationINT(r){
   console.log(len(numerator), 't*r');
   const denominator = r.totalReputation.sqrt().times(r.totalTokens.sqrt());
   console.log(len(denominator), 'T*R');
-  const factor = BigNumber(10).pow(Math.floor(len(denominator)/2));
+  const f = Math.floor(len(denominator)/2);
+  const factor = BigNumber(10).pow(f);
   console.log(len(factor), 'factor');
   const a = numerator.times(factor).div(denominator);
   console.log(len(numerator.times(factor)), 'numerator*factor');
@@ -98,6 +99,7 @@ contract('TestCalculation', function(accounts) {
         payoutAmount:BigNumber("827589347587349857398"),
       },
     ];
+
   reputations.forEach(data => {
     it("implementation1", async () => {
       m = await TestCalculation.deployed();
@@ -119,13 +121,30 @@ contract('TestCalculation', function(accounts) {
       console.log("Estimated Gas cost: ", gas.toString());
       console.log("");
     });
-  });
-
-  reputations.forEach(data => {
-    it("implementation2", async () => {
+    it.skip("implementation2", async () => {
       m = await TestCalculation.deployed();
       const gas = await m.implementation2.estimateGas(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
       const res = await m.implementation2(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
+      const onChainResult = BigNumber(res.toString());
+      const preciseResult = BigNumberCalculationINT(data);
+      console.log("");
+      console.log("On chain result: ", onChainResult.toString());
+      console.log("Precise result", preciseResult.toString());
+      console.log("");
+      console.log("User Tokens: ", data.userTokens.toString());
+      console.log("User Reputation: ", data.userReputation.toString());
+      console.log("Total Tokens: ", data.totalTokens.toString());
+      console.log("Total Reputation: ", data.totalReputation.toString());
+      console.log("Reward pool: ", data.payoutAmount.toString());
+      console.log("Percentage Wrong: ", onChainResult.minus(preciseResult).div(preciseResult).times(100).toString(), "%");
+      console.log("Absolute Wrong: ", onChainResult.minus(preciseResult).toString())
+      console.log("Estimated Gas cost: ", gas.toString());
+      console.log("");
+    });
+    it("implementation3", async () => {
+      m = await TestCalculation.deployed();
+      const gas = await m.implementation3.estimateGas(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
+      const res = await m.implementation3(data.payoutAmount.toString(), data.userReputation.toString(), data.userTokens.toString(), data.totalReputation.toString(), data.totalTokens.toString());
       const onChainResult = BigNumber(res.toString());
       const preciseResult = BigNumberCalculationINT(data);
       console.log("");

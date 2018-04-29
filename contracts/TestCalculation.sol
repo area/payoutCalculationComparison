@@ -21,6 +21,12 @@ contract TestCalculation {
     return (mul(sqrt(res), sqrt(availableAmount)) / (10 ** (power / 2))) ** 2;
   }
 
+  function implementation3(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
+    uint256 numerator = sqrt(r) * sqrt(t);
+    uint256 denomerator = sqrt(R) * sqrt(T);
+    return (mul(sqrt(numerator), sqrt(availableAmount)) / sqrt(denomerator)) ** 2;
+  }
+
   function sub(uint x, uint y) internal pure returns (uint z) {
     require((z = x - y) <= x);
   }
