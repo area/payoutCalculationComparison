@@ -6,25 +6,25 @@ contract TestCalculation {
   }
   function implementation1(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
     uint256 numerator = sqrt(r) * sqrt(t);
-    uint256 denomerator = sqrt(R) * sqrt(T);
-    uint256 factor = 10 ** getPower(numDigits(numerator), numDigits(denomerator) / 2);
-    uint256 res = mul(numerator, factor) / (denomerator / factor);
+    uint256 denominator = sqrt(R) * sqrt(T);
+    uint256 factor = 10 ** getPower(numDigits(numerator), numDigits(denominator) / 2);
+    uint256 res = mul(numerator, factor) / (denominator / factor);
     return (mul(sqrt(res), sqrt(availableAmount)) / factor) ** 2;
   }
 
   function implementation2(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
     uint256 numerator = sqrt(r) * sqrt(t);
-    uint256 denomerator = sqrt(R) * sqrt(T);
-    uint256 power = getPower(numDigits(numerator), (numDigits(denomerator) / 2));
+    uint256 denominator = sqrt(R) * sqrt(T);
+    uint256 power = getPower(numDigits(numerator), (numDigits(denominator) / 2));
     power = power % 2 == 0 ? power : sub(power, 1);
-    uint256 res = mul(numerator, 10 ** power) / denomerator;
+    uint256 res = mul(numerator, 10 ** power) / denominator;
     return (mul(sqrt(res), sqrt(availableAmount)) / (10 ** (power / 2))) ** 2;
   }
 
   function implementation3(uint256 availableAmount, uint256 r, uint256 t, uint256 R, uint256 T) public pure returns (uint256) {
     uint256 numerator = sqrt(r) * sqrt(t);
-    uint256 denomerator = sqrt(R) * sqrt(T);
-    return (mul(sqrt(numerator), sqrt(availableAmount)) / sqrt(denomerator)) ** 2;
+    uint256 denominator = mul(sqrt(R), sqrt(T));
+    return (mul(sqrt(numerator), sqrt(availableAmount)) / (sqrt(denominator) + 1)) ** 2;
   }
 
   function sub(uint x, uint y) internal pure returns (uint z) {
